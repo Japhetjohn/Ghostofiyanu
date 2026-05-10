@@ -1,0 +1,64 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --bg-primary: #0A0A0F;
+    --bg-secondary: #141419;
+    --surface-dark: #1C1C22;
+    --text-primary: #F5F5F0;
+    --text-secondary: #8A8A95;
+    --text-muted: #5A5A65;
+    --accent: #C8FF2E;
+    --accent-dim: rgba(200, 255, 46, 0.15);
+    --accent-glow: rgba(200, 255, 46, 0.5);
+    --font-display: 'Syne', system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+    --radius: 0.25rem;
+
+    --background: 240 20% 4%;
+    --foreground: 60 10% 95%;
+    --card: 240 14% 8%;
+    --card-foreground: 60 10% 95%;
+    --popover: 240 14% 8%;
+    --popover-foreground: 60 10% 95%;
+    --primary: 78 100% 59%;
+    --primary-foreground: 240 20% 4%;
+    --secondary: 240 8% 12%;
+    --secondary-foreground: 60 10% 95%;
+    --muted: 240 8% 12%;
+    --muted-foreground: 250 6% 47%;
+    --accent-hsl: 78 100% 59%;
+    --accent-foreground: 240 20% 4%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 60 10% 95%;
+    --border: 240 8% 18%;
+    --input: 240 8% 18%;
+    --ring: 78 100% 59%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    font-family: var(--font-mono);
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    letter-spacing: -0.01em;
+    line-height: 1.0;
+  }
+}
