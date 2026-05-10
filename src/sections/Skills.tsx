@@ -25,12 +25,9 @@ const skills: Skill[] = [
 export default function Skills() {
   const sectionRef = useRef<HTMLElement>(null);
   const headingRef = useRef<HTMLDivElement>(null);
-  const leftRef = useRef<HTMLDivElement>(null);
-  const [active, setActive] = useState(0);
-  const [prev, setPrev] = useState(0);
-  const [isTransitioning, setIsTransitioning] = useState(false);
+  const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
+  const statsRef = useRef<(HTMLSpanElement | null)[]>([]);
   const [isMobile, setIsMobile] = useState(false);
-  const slicesRef = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768);
@@ -39,285 +36,386 @@ export default function Skills() {
     return () => window.removeEventListener('resize', check);
   }, []);
 
-  // Entrance
   useEffect(() => {
-    gsap.fromTo(headingRef.current, { opacity: 0, y: 40 }, {
-      opacity: 1, y: 0, duration: 0.6, ease: 'power2.out',
-      scrollTrigger: { trigger: sectionRef.current, start: 'top bottom-=10%', toggleActions: 'play none none reverse' },
-    });
+    const ctx = gsap.context(() => {
+      // Heading entrance
+      gsap.fromTo(
+        headingRef.current,
+        { opacity: 0, y: 40, filter: 'blur(8px)' },
+        {
+          opacity: 1,
+          y: 0,
+          filter: 'blur(0px)',
+          duration: 0.8,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: 'top bottom-=10%',
+            toggleActions: 'play none none reverse',
+          },
+        }
+      );
+
+      // Cards staggered entrance with blur-to-focus
+      cardsRef.current.forEach((card, i) => {
+        if (!card) return;
+        gsap.fromTo(
+          card,
+          { opacity: 0, y: 60, filter: 'blur(6px)' },
+          {
+            opacity: 1,
+            y: 0,
+            filter: 'blur(0px)',
+            duration: 0.8,
+            ease: 'power3.out',
+            delay: i * 0.08,
+            scrollTrigger: {
+              trigger: card,
+              start: 'top bottom-=5%',
+              toggleActions: 'play none none reverse',
+            },
+          }
+        );
+      });
+
+      // Stat counter animation
+      statsRef.current.forEach((stat, i) => {
+        if (!stat) return;
+        const target = skills[i].stat;
+        const match = target.match(/(\d+)/);
+        if (!match) return;
+        const numValue = parseInt(match[1], 10);
+        const suffix = target.replace(/\d+/, '');
+        const obj = { val: 0 };
+
+        gsap.to(obj, {
+          val: numValue,
+          duration: 1.2,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: stat,
+            start: 'top bottom-=5%',
+            toggleActions: 'play none none reverse',
+          },
+          onUpdate: () => {
+            stat.textContent = Math.floor(obj.val) + suffix;
+          },
+        });
+      });
+    }, sectionRef);
+
+    return () => ctx.revert();
   }, []);
 
-  // Glitch slice transition
-  const transitionTo = (idx: number) => {
-    if (idx === active || isTransitioning) return;
-    setPrev(active);
-    setIsTransitioning(true);
-    setActive(idx);
-
-    const sliceCount = 8;
-    const leftEl = leftRef.current;
-    if (!leftEl) { setIsTransitioning(false); return; }
-
-    // Create slices of current image that slide away
-    const rect = leftEl.getBoundingClientRect();
-    const sliceH = rect.height / sliceCount;
-
-    const tl = gsap.timeline({
-      onComplete: () => {
-        // Clear slices
-        slicesRef.current.forEach(s => s?.remove());
-        slicesRef.current = [];
-        setIsTransitioning(false);
-      }
-    });
-
-    // Animate out old image with slice effect
-    for (let i = 0; i < sliceCount; i++) {
-      const slice = document.createElement('div');
-      slice.style.cssText = `
-        position: absolute;
-        left: 0;
-        width: 100%;
-        height: ${sliceH + 1}px;
-        top: ${i * sliceH}px;
-        background-image: url(${skills[prev].image});
-        background-size: ${rect.width}px ${rect.height}px;
-        background-position: 0 -${i * sliceH}px;
-        z-index: 10;
-        pointer-events: none;
-      `;
-      leftEl.appendChild(slice);
-      slicesRef.current.push(slice);
-
-      const dir = i % 2 === 0 ? -1 : 1;
-      tl.to(slice, {
-        x: dir * (60 + Math.random() * 40),
-        opacity: 0,
-        duration: 0.3,
-        ease: 'power2.in',
-      }, i * 0.02);
-    }
-  };
-
-  // Auto-cycle
-  useEffect(() => {
-    const timer = setInterval(() => {
-      if (!isTransitioning) {
-        setPrev(active);
-        setActive((a) => (a + 1) % skills.length);
-      }
-    }, 5000);
-    return () => clearInterval(timer);
-  }, [active, isTransitioning]);
-
   return (
-    <section id="skills" ref={sectionRef} className="relative z-10"
-      style={{ background: '#0A0A0F', padding: '8rem 0' }}>
-
+    <section
+      id="skills"
+      ref={sectionRef}
+      className="relative z-10"
+      style={{ background: '#0A0A0F', padding: '8rem 0' }}
+    >
       <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 1.5rem' }}>
         {/* Header */}
         <div ref={headingRef} style={{ opacity: 0, marginBottom: '4rem' }}>
-          <div className="font-mono uppercase" style={{ fontSize: '0.625rem', color: '#C8FF2E', letterSpacing: '0.15em', marginBottom: '0.75rem' }}>
+          <div
+            className="font-mono uppercase"
+            style={{
+              fontSize: '0.625rem',
+              color: '#C8FF2E',
+              letterSpacing: '0.15em',
+              marginBottom: '0.75rem',
+            }}
+          >
             Capabilities
           </div>
-          <h1 className="font-display uppercase" style={{ fontSize: 'clamp(2.5rem, 6vw, 5rem)', lineHeight: 0.9, letterSpacing: '-0.02em', color: '#F5F5F0' }}>
+          <h1
+            className="font-display uppercase"
+            style={{
+              fontSize: 'clamp(2.5rem, 6vw, 5rem)',
+              lineHeight: 0.9,
+              letterSpacing: '-0.02em',
+              color: '#F5F5F0',
+            }}
+          >
             Skills
           </h1>
         </div>
 
-        {/* Split layout */}
-        <div style={{
-          display: 'flex',
-          flexDirection: isMobile ? 'column' : 'row',
-          gap: isMobile ? '1.5rem' : '0',
-          minHeight: isMobile ? 'auto' : '500px',
-        }}>
-          {/* LEFT — Image panel */}
-          <div style={{
-            width: isMobile ? '100%' : '55%',
-            position: 'relative',
-            overflow: 'hidden',
-            background: '#0A0A0F',
-            aspectRatio: isMobile ? '16/10' : 'auto',
-            minHeight: isMobile ? '200px' : '500px',
-          }} ref={leftRef}>
-            {/* Glow */}
-            <div style={{
-              position: 'absolute',
-              inset: '15%',
-              borderRadius: '50%',
-              background: 'radial-gradient(circle, rgba(200, 255, 46, 0.1) 0%, transparent 70%)',
-              filter: 'blur(40px)',
-              pointerEvents: 'none',
-              zIndex: 1,
-            }} />
-            {/* Image */}
-            <img
-              key={skills[active].id}
-              src={skills[active].image}
-              alt={skills[active].title}
+        {/* Skill Grid */}
+        <div className="skills-grid">
+          {skills.map((skill, i) => (
+            <div
+              key={skill.id}
+              ref={(el) => { cardsRef.current[i] = el; }}
+              className="skill-card"
               style={{
-                position: 'absolute',
-                inset: 0,
-                width: '100%',
-                height: '100%',
-                objectFit: 'contain',
-                zIndex: 2,
-                padding: '2rem',
-                filter: 'drop-shadow(0 20px 40px rgba(0,0,0,0.5))',
+                position: 'relative',
+                opacity: 0,
+                padding: isMobile ? '1.5rem 0' : '2rem 1.5rem',
+                cursor: 'default',
               }}
-              loading="lazy"
-            />
-            {/* Scanline overlay */}
-            <div style={{
-              position: 'absolute',
-              inset: 0,
-              background: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(10,10,15,0.08) 2px, rgba(10,10,15,0.08) 4px)',
-              pointerEvents: 'none',
-              zIndex: 3,
-            }} />
-            {/* Stat overlay */}
-            <div style={{
-              position: 'absolute',
-              bottom: '1.5rem',
-              left: '1.5rem',
-              zIndex: 4,
-            }}>
-              <div className="font-display" style={{ fontSize: '2.5rem', color: '#C8FF2E', lineHeight: 1 }}>
-                {skills[active].stat}
-              </div>
-              <div className="font-mono" style={{ fontSize: '0.5625rem', color: '#5A5A65', letterSpacing: '0.1em' }}>
-                {skills[active].statLabel}
-              </div>
-            </div>
-          </div>
-
-          {/* RIGHT — Skill list */}
-          <div style={{
-            width: isMobile ? '100%' : '45%',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            paddingLeft: isMobile ? '0' : '3rem',
-            gap: '0',
-          }}>
-            {skills.map((skill, i) => {
-              const isActive = i === active;
-              return (
-                <div
-                  key={skill.id}
-                  onClick={() => transitionTo(i)}
-                  onMouseEnter={() => transitionTo(i)}
-                  className="cursor-pointer"
-                  style={{
-                    padding: isMobile ? '0.875rem 0' : '1.25rem 0',
-                    borderBottom: '1px solid rgba(90, 90, 101, 0.12)',
-                    transition: 'all 0.4s ease',
-                    position: 'relative',
-                  }}
-                >
-                  {/* Hover bg fill */}
-                  <div style={{
-                    position: 'absolute',
-                    inset: 0,
-                    background: isActive ? 'rgba(200, 255, 46, 0.03)' : 'transparent',
-                    transition: 'background 0.4s ease',
-                    borderRadius: '2px',
-                  }} />
-
-                  <div style={{ position: 'relative', zIndex: 2 }}>
-                    {/* Title row */}
-                    <div className="flex items-center justify-between">
-                      <h3 className="font-display uppercase" style={{
-                        fontSize: isMobile ? '0.875rem' : 'clamp(0.875rem, 1.5vw, 1.25rem)',
-                        lineHeight: 1.1,
-                        letterSpacing: '0.02em',
-                        color: isActive ? '#C8FF2E' : '#5A5A65',
-                        transition: 'color 0.4s ease',
-                      }}>
-                        {skill.title}
-                      </h3>
-                      <span className="font-mono" style={{
-                        fontSize: '0.625rem',
-                        color: isActive ? '#C8FF2E' : '#5A5A65',
-                        opacity: isActive ? 1 : 0,
-                        transition: 'all 0.4s ease',
-                        letterSpacing: '0.05em',
-                      }}>
-                        {String(skill.id).padStart(2, '0')}
-                      </span>
-                    </div>
-
-                    {/* Description — expands when active */}
-                    <div style={{
-                      maxHeight: isActive ? '80px' : '0',
-                      overflow: 'hidden',
-                      transition: 'max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
-                    }}>
-                      <p className="font-mono" style={{
-                        fontSize: '0.75rem',
-                        lineHeight: 1.6,
-                        color: '#8A8A95',
-                        marginTop: '0.75rem',
-                        maxWidth: '380px',
-                        opacity: isActive ? 1 : 0,
-                        transition: 'opacity 0.4s ease 0.1s',
-                      }}>
-                        {skill.description}
-                      </p>
-                    </div>
-
-                    {/* Active indicator bar */}
-                    <div style={{
-                      position: 'absolute',
-                      left: 0,
-                      bottom: 0,
-                      height: '1px',
-                      width: isActive ? '100%' : '0%',
-                      background: 'linear-gradient(90deg, #C8FF2E, transparent)',
-                      transition: 'width 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
-                    }} />
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Mobile image strip */}
-        {isMobile && (
-          <div style={{
-            display: 'flex',
-            gap: '6px',
-            marginTop: '1.5rem',
-            overflowX: 'auto',
-            paddingBottom: '0.5rem',
-          }}>
-            {skills.map((skill, i) => (
-              <button
-                key={i}
-                onClick={() => transitionTo(i)}
+            >
+              {/* Scan line sweep */}
+              <div
+                className="scan-line"
                 style={{
-                  width: '56px',
-                  height: '56px',
-                  borderRadius: 0,
-                  border: 'none',
-                  background: 'transparent',
-                  flexShrink: 0,
-                  overflow: 'hidden',
+                  position: 'absolute',
+                  top: 0,
+                  left: '-100%',
+                  width: '100%',
+                  height: '100%',
+                  background:
+                    'linear-gradient(90deg, transparent, rgba(200, 255, 46, 0.03), transparent)',
+                  pointerEvents: 'none',
+                  transition: 'left 0.8s ease',
+                  zIndex: 1,
+                }}
+              />
+
+              {/* Radial glow behind image */}
+              <div
+                className="skill-glow"
+                style={{
+                  position: 'absolute',
+                  top: '10%',
+                  left: '50%',
+                  transform: 'translateX(-50%)',
+                  width: '60%',
+                  height: '40%',
+                  borderRadius: '50%',
+                  background:
+                    'radial-gradient(circle, rgba(200, 255, 46, 0.06) 0%, transparent 70%)',
+                  filter: 'blur(40px)',
+                  pointerEvents: 'none',
+                  opacity: 0,
+                  transition: 'opacity 0.5s ease',
+                }}
+              />
+
+              {/* Image */}
+              <div
+                style={{
+                  position: 'relative',
+                  aspectRatio: '1 / 1',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  transition: 'all 0.3s ease',
-                  padding: '6px',
+                  marginBottom: '1.5rem',
+                  zIndex: 2,
                 }}
               >
-                <img src={skill.image} alt="" style={{ width: '100%', height: '100%', objectFit: 'contain', filter: i === active ? 'none' : 'grayscale(0.5) brightness(0.6)' }} loading="lazy" />
-              </button>
-            ))}
-          </div>
-        )}
+                <img
+                  src={skill.image}
+                  alt={skill.title}
+                  className="skill-image"
+                  style={{
+                    width: '70%',
+                    height: '70%',
+                    objectFit: 'contain',
+                    filter: 'drop-shadow(0 20px 40px rgba(0,0,0,0.4))',
+                    transition: 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), filter 0.6s ease',
+                  }}
+                  loading="lazy"
+                />
+              </div>
+
+              {/* Content */}
+              <div style={{ position: 'relative', zIndex: 2 }}>
+                {/* Title row */}
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'baseline',
+                    justifyContent: 'space-between',
+                    marginBottom: '0.75rem',
+                  }}
+                >
+                  <h3
+                    className="skill-title font-display uppercase"
+                    style={{
+                      fontSize: isMobile
+                        ? '0.875rem'
+                        : 'clamp(0.75rem, 1.1vw, 1rem)',
+                      lineHeight: 1.1,
+                      letterSpacing: '0.02em',
+                      color: '#F5F5F0',
+                      transition: 'color 0.4s ease',
+                    }}
+                  >
+                    {skill.title}
+                  </h3>
+                  <span
+                    className="font-mono"
+                    style={{
+                      fontSize: '0.625rem',
+                      color: '#5A5A65',
+                      letterSpacing: '0.05em',
+                      flexShrink: 0,
+                      marginLeft: '0.75rem',
+                    }}
+                  >
+                    {String(skill.id).padStart(2, '0')}
+                  </span>
+                </div>
+
+                {/* Description */}
+                <p
+                  className="font-mono"
+                  style={{
+                    fontSize: '0.75rem',
+                    lineHeight: 1.6,
+                    color: '#8A8A95',
+                    marginBottom: '1.25rem',
+                    maxWidth: '340px',
+                  }}
+                >
+                  {skill.description}
+                </p>
+
+                {/* Stat + line */}
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '1rem',
+                  }}
+                >
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'baseline',
+                      gap: '0.4rem',
+                    }}
+                  >
+                    <span
+                      ref={(el) => { statsRef.current[i] = el; }}
+                      className="font-display"
+                      style={{
+                        fontSize: '1.75rem',
+                        color: '#C8FF2E',
+                        lineHeight: 1,
+                      }}
+                    >
+                      {skill.stat}
+                    </span>
+                    <span
+                      className="font-mono"
+                      style={{
+                        fontSize: '0.5625rem',
+                        color: '#5A5A65',
+                        letterSpacing: '0.1em',
+                      }}
+                    >
+                      {skill.statLabel}
+                    </span>
+                  </div>
+                  <div
+                    style={{
+                      flex: 1,
+                      height: '1px',
+                      background:
+                        'linear-gradient(90deg, rgba(90, 90, 101, 0.3), transparent)',
+                    }}
+                  />
+                </div>
+              </div>
+
+              {/* Corner brackets on hover */}
+              <div
+                className="corner-brackets"
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  pointerEvents: 'none',
+                  zIndex: 3,
+                  opacity: 0,
+                  transition: 'opacity 0.4s ease',
+                }}
+              >
+                <div
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: '12px',
+                    height: '12px',
+                    borderTop: '1px solid rgba(200, 255, 46, 0.35)',
+                    borderLeft: '1px solid rgba(200, 255, 46, 0.35)',
+                  }}
+                />
+                <div
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    right: 0,
+                    width: '12px',
+                    height: '12px',
+                    borderTop: '1px solid rgba(200, 255, 46, 0.35)',
+                    borderRight: '1px solid rgba(200, 255, 46, 0.35)',
+                  }}
+                />
+                <div
+                  style={{
+                    position: 'absolute',
+                    bottom: 0,
+                    left: 0,
+                    width: '12px',
+                    height: '12px',
+                    borderBottom: '1px solid rgba(200, 255, 46, 0.35)',
+                    borderLeft: '1px solid rgba(200, 255, 46, 0.35)',
+                  }}
+                />
+                <div
+                  style={{
+                    position: 'absolute',
+                    bottom: 0,
+                    right: 0,
+                    width: '12px',
+                    height: '12px',
+                    borderBottom: '1px solid rgba(200, 255, 46, 0.35)',
+                    borderRight: '1px solid rgba(200, 255, 46, 0.35)',
+                  }}
+                />
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
+
+      <style>{`
+        .skills-grid {
+          display: grid;
+          gap: 1.5rem;
+          grid-template-columns: 1fr;
+        }
+        @media (min-width: 768px) {
+          .skills-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+          }
+        }
+        @media (min-width: 1200px) {
+          .skills-grid {
+            grid-template-columns: repeat(3, 1fr);
+          }
+        }
+        .skill-card:hover .scan-line {
+          left: 100% !important;
+        }
+        .skill-card:hover .skill-glow {
+          opacity: 1 !important;
+        }
+        .skill-card:hover .skill-image {
+          transform: scale(1.06) !important;
+          filter: drop-shadow(0 20px 40px rgba(200, 255, 46, 0.12)) !important;
+        }
+        .skill-card:hover .skill-title {
+          color: #C8FF2E !important;
+        }
+        .skill-card:hover .corner-brackets {
+          opacity: 1 !important;
+        }
+      `}</style>
     </section>
   );
 }
