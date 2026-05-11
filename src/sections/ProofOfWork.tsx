@@ -21,37 +21,37 @@ const stages: ProjectStage[] = [
     id: 1, title: 'COMMUNITY SEED', subtitle: 'Where It All Began',
     role: 'Affiliate & Contributor', org: 'Early Stage', period: '2023 — 2024',
     achievements: ['Started as a contributor and affiliate in Web3 fintech', 'Learned community building from the ground up', 'Built first referral networks and engagement loops', 'Discovered the power of trust-based onboarding'],
-    icon: '01', metrics: [{ label: 'Referrals', value: '209+' }, { label: 'Events', value: '500+' }],
+    icon: '', metrics: [{ label: 'Referrals', value: '209+' }, { label: 'Events', value: '500+' }],
   },
   {
     id: 2, title: 'GROWTH ENGINE', subtitle: 'Scaling Communities',
     role: 'Community Manager / Growth Lead', org: 'HostFinance', period: 'Growth Phase',
     achievements: ['Led community growth and retention strategies', 'Built referral systems that drove 200+ active users', 'Developed onboarding flows for fintech products', 'Managed engagement campaigns and ambassador programs'],
-    icon: '02', metrics: [{ label: 'Referrals', value: '200+' }, { label: 'Role', value: 'Growth Lead' }],
+    icon: '', metrics: [{ label: 'Referrals', value: '200+' }, { label: 'Role', value: 'Growth Lead' }],
   },
   {
     id: 3, title: 'EDUCATION FIRST', subtitle: 'Teaching & Onboarding',
     role: 'Co-Lead / Community Manager', org: 'ORBIT / Academia', period: '2023 — 2024',
     achievements: ['Co-led ORBIT program at Ilorin Innovation Hub', 'Managed Academia App learning community', 'Reached 1000+ students through campus onboarding', 'Organized Q&As, AMAs, and educational study groups'],
-    icon: '03', metrics: [{ label: 'Students', value: '1000+' }, { label: 'Programs', value: '2' }],
+    icon: '', metrics: [{ label: 'Students', value: '1000+' }, { label: 'Programs', value: '2' }],
   },
   {
     id: 4, title: 'REAL WORLD IMPACT', subtitle: 'From Digital to Physical',
     role: 'Crypto Adoption Lead', org: 'Various Merchants', period: '2023 — 2024',
     achievements: ['Onboarded 10+ businesses to crypto payments', 'Worked with clothing stores, restaurants, and salons', 'Hosted IRL events connecting product to people', 'Bridged traditional commerce with Web3 finance'],
-    icon: '04', metrics: [{ label: 'Businesses', value: '10+' }, { label: 'Sectors', value: '3' }],
+    icon: '', metrics: [{ label: 'Businesses', value: '10+' }, { label: 'Sectors', value: '3' }],
   },
   {
     id: 5, title: 'CONTENT ENGINE', subtitle: 'Voice of the Community',
     role: 'X Spaces Host & Content Creator', org: 'Personal Brand', period: '2023 — Present',
     achievements: ['Built @ghostofiyanu presence with engaged followers', 'Hosted regular X Spaces on Web3 trends', 'Created educational content driving fintech adoption', 'Established thought leadership in the African Web3 space'],
-    icon: '05', metrics: [{ label: 'Followers', value: '3K+' }, { label: 'Spaces', value: '50+' }],
+    icon: '', metrics: [{ label: 'Followers', value: '3K+' }, { label: 'Spaces', value: '50+' }],
   },
   {
     id: 6, title: 'STRATEGIC GROWTH', subtitle: 'The Next Level',
     role: 'Web3 Strategist & Partnership Lead', org: 'Freelance', period: '2024 — Present',
     achievements: ['Developed go-to-market strategies for Web3 projects', 'Managed KOL partnerships and influencer campaigns', 'Advised on community structures and growth frameworks', 'Connected projects with strategic collaborators'],
-    icon: '06', metrics: [{ label: 'Projects', value: '8+' }, { label: 'KOLs', value: '20+' }],
+    icon: '', metrics: [{ label: 'Projects', value: '8+' }, { label: 'KOLs', value: '20+' }],
   },
 ];
 
@@ -134,7 +134,7 @@ export default function ProofOfWork() {
         }}>
           {/* Detail Panel */}
           <div style={{ width: isMobile ? '100%' : '380px', flexShrink: 0, order: isMobile ? 0 : 0 }}>
-            <StageDetail stage={stages[activeStage]} index={activeStage} total={stages.length} isMobile={isMobile} />
+            <StageDetail stage={stages[activeStage]} index={activeStage} isMobile={isMobile} />
           </div>
 
           {/* Wheel */}
@@ -191,7 +191,7 @@ export default function ProofOfWork() {
                         boxShadow: isActive ? '0 0 20px rgba(200, 255, 46, 0.25), inset 0 0 10px rgba(200, 255, 46, 0.05)' : 'none',
                         transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
                         letterSpacing: '0.02em',
-                      }}>{stage.icon}</div>
+                      }}>{stage.icon || <span style={{ width: '4px', height: '4px', borderRadius: '50%', background: isActive ? '#C8FF2E' : '#5A5A65', display: 'inline-block' }} />}</div>
                     </div>
                   </div>
                 );
@@ -247,7 +247,7 @@ export default function ProofOfWork() {
   );
 }
 
-function StageDetail({ stage, index, total, isMobile }: { stage: ProjectStage; index: number; total: number; isMobile: boolean }) {
+function StageDetail({ stage, index, isMobile }: { stage: ProjectStage; index: number; isMobile: boolean }) {
   const contentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -265,15 +265,11 @@ function StageDetail({ stage, index, total, isMobile }: { stage: ProjectStage; i
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
           <span className="font-mono" style={{ fontSize: '0.5625rem', color: '#C8FF2E', letterSpacing: '0.1em' }}>
-            STAGE {String(index + 1).padStart(2, '0')}/{String(total).padStart(2, '0')}
+            {stage.subtitle}
           </span>
           <div style={{ width: '20px', height: '1px', background: 'rgba(200, 255, 46, 0.25)' }} />
         </div>
         <span className="font-mono" style={{ fontSize: '0.5625rem', color: '#5A5A65' }}>{stage.period}</span>
-      </div>
-
-      <div className="font-mono uppercase mb-1" style={{ fontSize: '0.5625rem', color: '#8A8A95', letterSpacing: '0.1em' }}>
-        {stage.subtitle}
       </div>
 
       <h3 className="font-display uppercase" style={{

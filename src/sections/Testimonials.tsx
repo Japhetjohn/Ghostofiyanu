@@ -51,26 +51,26 @@ function TestimonialCard({ testimonial }: { testimonial: (typeof testimonials)[0
     <div
       className="testimonial-card flex-shrink-0"
       style={{
-        width: '380px',
-        padding: '1.5rem',
+        width: 'clamp(280px, 85vw, 380px)',
+        padding: 'clamp(1rem, 3vw, 1.5rem)',
         background: 'rgba(28, 28, 34, 0.5)',
         border: '1px solid rgba(90, 90, 101, 0.2)',
         borderRadius: '8px',
         backdropFilter: 'blur(8px)',
       }}
     >
-      <div style={{ marginBottom: '1rem' }}>
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <div style={{ marginBottom: '0.75rem' }}>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M10 11H6C6 8.79086 7.79086 7 10 7V5C6.68629 5 4 7.68629 4 11V19H10V11ZM20 11H16C16 8.79086 17.7909 7 20 7V5C16.6863 5 14 7.68629 14 11V19H20V11Z" fill="rgba(200, 255, 46, 0.3)" />
         </svg>
       </div>
       <p
         className="font-mono"
         style={{
-          fontSize: '0.8125rem',
+          fontSize: 'clamp(0.75rem, 2.5vw, 0.8125rem)',
           lineHeight: 1.7,
           color: '#8A8A95',
-          marginBottom: '1.25rem',
+          marginBottom: '1rem',
         }}
       >
         {testimonial.text}
@@ -78,22 +78,23 @@ function TestimonialCard({ testimonial }: { testimonial: (typeof testimonials)[0
       <div className="flex items-center gap-3">
         <div
           style={{
-            width: '36px',
-            height: '36px',
+            width: '32px',
+            height: '32px',
             borderRadius: '50%',
             background: 'linear-gradient(135deg, rgba(200, 255, 46, 0.15), rgba(90, 90, 101, 0.3))',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            fontSize: '0.75rem',
+            fontSize: '0.7rem',
             fontWeight: 700,
             color: '#C8FF2E',
             fontFamily: 'var(--font-display)',
+            flexShrink: 0,
           }}
         >
           {testimonial.name.charAt(0)}
         </div>
-        <div>
+        <div style={{ minWidth: 0 }}>
           <div
             className="font-mono"
             style={{
@@ -101,6 +102,9 @@ function TestimonialCard({ testimonial }: { testimonial: (typeof testimonials)[0
               color: '#F5F5F0',
               fontWeight: 600,
               letterSpacing: '0.02em',
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
             }}
           >
             {testimonial.name}
@@ -151,13 +155,13 @@ export default function Testimonials() {
       id="testimonials"
       ref={sectionRef}
       className="relative z-10 overflow-hidden"
-      style={{ background: '#0A0A0F', padding: '8rem 0' }}
+      style={{ background: '#0A0A0F', padding: 'clamp(4rem, 10vw, 8rem) 0' }}
     >
       {/* Header */}
       <div
         ref={headingRef}
         className="mx-auto"
-        style={{ maxWidth: '1200px', padding: '0 1.5rem', opacity: 0, marginBottom: '4rem' }}
+        style={{ maxWidth: '1200px', padding: '0 1.5rem', opacity: 0, marginBottom: 'clamp(2rem, 5vw, 4rem)' }}
       >
         <div
           className="font-mono uppercase tracking-widest mb-3"
@@ -168,7 +172,7 @@ export default function Testimonials() {
         <h1
           className="font-display uppercase"
           style={{
-            fontSize: 'clamp(2.5rem, 6vw, 5rem)',
+            fontSize: 'clamp(2rem, 5vw, 5rem)',
             lineHeight: 0.9,
             letterSpacing: '-0.02em',
             color: '#F5F5F0',
@@ -183,12 +187,11 @@ export default function Testimonials() {
         className="testimonials-marquee-top"
         style={{
           display: 'flex',
-          gap: '1.5rem',
-          marginBottom: '1.5rem',
+          gap: 'clamp(0.75rem, 2vw, 1.5rem)',
+          marginBottom: 'clamp(0.75rem, 2vw, 1.5rem)',
           width: 'max-content',
         }}
       >
-        {/* Duplicate for seamless loop */}
         {[...topRow, ...topRow, ...topRow, ...topRow].map((t, i) => (
           <TestimonialCard key={`top-${t.id}-${i}`} testimonial={t} />
         ))}
@@ -199,11 +202,10 @@ export default function Testimonials() {
         className="testimonials-marquee-bottom"
         style={{
           display: 'flex',
-          gap: '1.5rem',
+          gap: 'clamp(0.75rem, 2vw, 1.5rem)',
           width: 'max-content',
         }}
       >
-        {/* Duplicate for seamless loop */}
         {[...bottomRow, ...bottomRow, ...bottomRow, ...bottomRow].map((t, i) => (
           <TestimonialCard key={`bottom-${t.id}-${i}`} testimonial={t} />
         ))}
@@ -211,25 +213,25 @@ export default function Testimonials() {
 
       {/* Edge fade gradients */}
       <div
-        className="pointer-events-none"
+        className="edge-fade-left pointer-events-none"
         style={{
           position: 'absolute',
           top: 0,
           left: 0,
           bottom: 0,
-          width: '120px',
+          width: 'clamp(60px, 10vw, 120px)',
           background: 'linear-gradient(to right, #0A0A0F, transparent)',
           zIndex: 2,
         }}
       />
       <div
-        className="pointer-events-none"
+        className="edge-fade-right pointer-events-none"
         style={{
           position: 'absolute',
           top: 0,
           right: 0,
           bottom: 0,
-          width: '120px',
+          width: 'clamp(60px, 10vw, 120px)',
           background: 'linear-gradient(to left, #0A0A0F, transparent)',
           zIndex: 2,
         }}
@@ -253,11 +255,6 @@ export default function Testimonials() {
         .testimonials-marquee-top:hover,
         .testimonials-marquee-bottom:hover {
           animation-play-state: paused;
-        }
-        @media (max-width: 767px) {
-          .testimonial-card {
-            width: 300px !important;
-          }
         }
       `}</style>
     </section>

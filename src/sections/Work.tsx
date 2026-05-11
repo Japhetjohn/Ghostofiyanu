@@ -34,21 +34,12 @@ const projects = [
   },
   {
     id: 4,
-    title: 'ACADEMIA APP',
+    title: 'ACADEMIA',
     role: 'Community Manager',
     description:
       'Managed community operations for Academia App, engaging students and learners. Organized study groups, Q&A sessions, and educational campaigns that improved retention and user engagement within university circles.',
     image: '/images/Academia-logo-2021.svg',
     metrics: ['Community Manager', 'Education', 'Retention'],
-  },
-  {
-    id: 5,
-    title: 'MERCHANT ONBOARDING',
-    role: 'Crypto Adoption Lead',
-    description:
-      'Onboarded 10+ local businesses including clothing stores, restaurants, and salons to accept crypto payments. Bridged the gap between traditional commerce and Web3 finance through hands-on IRL engagement and education.',
-    image: '/images/work-irl.png',
-    metrics: ['10+ Businesses', 'IRL Onboarding', 'Crypto Payments'],
   },
 ];
 
@@ -57,33 +48,34 @@ export default function Work() {
   const headingRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
-  const slideRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const contentRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   const goToSlide = (index: number) => {
     if (isAnimating || index === activeIndex) return;
     setIsAnimating(true);
 
-    const direction = index > activeIndex ? 1 : -1;
-    const currentSlide = slideRefs.current[activeIndex];
-    const nextSlide = slideRefs.current[index];
+    const currentEl = contentRefs.current[activeIndex];
+    const nextEl = contentRefs.current[index];
 
-    if (currentSlide && nextSlide) {
-      gsap.to(currentSlide, {
+    if (currentEl) {
+      gsap.to(currentEl, {
         opacity: 0,
-        x: -100 * direction,
-        duration: 0.5,
-        ease: 'power2.inOut',
+        y: -20,
+        duration: 0.35,
+        ease: 'power2.in',
       });
+    }
 
+    if (nextEl) {
       gsap.fromTo(
-        nextSlide,
-        { opacity: 0, x: 100 * direction },
+        nextEl,
+        { opacity: 0, y: 30 },
         {
           opacity: 1,
-          x: 0,
+          y: 0,
           duration: 0.5,
-          ease: 'power2.inOut',
+          ease: 'power2.out',
+          delay: 0.2,
           onComplete: () => setIsAnimating(false),
         }
       );
@@ -121,41 +113,42 @@ export default function Work() {
         },
       }
     );
-
-    // Initialize first slide
-    slideRefs.current.forEach((slide, i) => {
-      if (slide) {
-        gsap.set(slide, { opacity: i === 0 ? 1 : 0, x: i === 0 ? 0 : 100 });
-      }
-    });
   }, []);
 
   // Auto-play
   useEffect(() => {
     const interval = setInterval(() => {
-      if (!isAnimating) {
-        nextSlide();
-      }
-    }, 5000);
+      setActiveIndex((prev) => {
+        const next = (prev + 1) % projects.length;
+        const currentEl = contentRefs.current[prev];
+        const nextEl = contentRefs.current[next];
+
+        if (currentEl) {
+          gsap.to(currentEl, { opacity: 0, y: -20, duration: 0.35, ease: 'power2.in' });
+        }
+        if (nextEl) {
+          gsap.fromTo(nextEl, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out', delay: 0.2 });
+        }
+
+        return next;
+      });
+    }, 6000);
     return () => clearInterval(interval);
-  }, [activeIndex, isAnimating]);
+  }, []);
 
   return (
     <section
       id="work"
       ref={sectionRef}
       className="relative z-10"
-      style={{ background: '#0A0A0F', padding: '8rem 0' }}
+      style={{ background: '#0A0A0F', padding: 'clamp(4rem, 8vw, 8rem) 0' }}
     >
-      <div
-        className="mx-auto"
-        style={{ maxWidth: '1200px', padding: '0 1.5rem' }}
-      >
+      <div className="mx-auto" style={{ maxWidth: '1200px', padding: '0 1.5rem' }}>
         {/* Header */}
         <div
           ref={headingRef}
           className="flex items-end justify-between"
-          style={{ opacity: 0, marginBottom: '4rem' }}
+          style={{ opacity: 0, marginBottom: 'clamp(2rem, 4vw, 4rem)' }}
         >
           <div>
             <div
@@ -167,7 +160,7 @@ export default function Work() {
             <h1
               className="font-display uppercase"
               style={{
-                fontSize: 'clamp(2.5rem, 6vw, 5rem)',
+                fontSize: 'clamp(2rem, 5vw, 4rem)',
                 lineHeight: 0.9,
                 letterSpacing: '-0.02em',
                 color: '#F5F5F0',
@@ -238,61 +231,43 @@ export default function Work() {
           </div>
         </div>
 
-        {/* Slideshow */}
+        {/* Slideshow card */}
         <div
-          ref={containerRef}
-          className="relative"
           style={{
-            background: 'rgba(28, 28, 34, 0.4)',
-            border: '1px solid rgba(90, 90, 101, 0.15)',
-            borderRadius: '8px',
-            overflow: 'hidden',
-            minHeight: '480px',
+            background: 'rgba(28, 28, 34, 0.3)',
+            border: '1px solid rgba(90, 90, 101, 0.12)',
+            borderRadius: '12px',
+            padding: 'clamp(1.5rem, 4vw, 3rem)',
           }}
         >
           {projects.map((project, index) => (
             <div
               key={project.id}
-              ref={(el) => { slideRefs.current[index] = el; }}
-              className="absolute inset-0"
+              ref={(el) => { contentRefs.current[index] = el; }}
               style={{
-                display: 'flex',
-                flexDirection: 'column',
-                padding: '3rem',
+                display: index === activeIndex ? 'block' : 'none',
                 opacity: index === 0 ? 1 : 0,
-                pointerEvents: index === activeIndex ? 'auto' : 'none',
               }}
             >
-              <div
-                className="flex flex-col md:flex-row items-center gap-8 md:gap-12"
-                style={{ height: '100%' }}
-              >
-                {/* Logo side */}
+              <div className="flex flex-col md:flex-row items-center gap-8 md:gap-12">
+                {/* Logo */}
                 <div
                   className="flex items-center justify-center"
                   style={{
                     flex: '0 0 auto',
                     width: '100%',
-                    maxWidth: '320px',
-                    minHeight: '240px',
+                    maxWidth: '300px',
+                    minHeight: '180px',
                   }}
                 >
-                  <div
-                    style={{
-                      position: 'relative',
-                      width: '100%',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}
-                  >
+                  <div className="relative w-full flex items-center justify-center">
                     <div
                       style={{
                         position: 'absolute',
-                        width: '80%',
-                        height: '80%',
+                        width: '70%',
+                        height: '70%',
                         borderRadius: '50%',
-                        background: 'radial-gradient(circle, rgba(200, 255, 46, 0.06) 0%, transparent 70%)',
+                        background: 'radial-gradient(circle, rgba(200, 255, 46, 0.05) 0%, transparent 70%)',
                         filter: 'blur(40px)',
                         pointerEvents: 'none',
                       }}
@@ -302,9 +277,9 @@ export default function Work() {
                       alt={project.title}
                       style={{
                         width: '100%',
-                        maxWidth: '280px',
+                        maxWidth: '260px',
                         height: 'auto',
-                        maxHeight: '260px',
+                        maxHeight: '220px',
                         objectFit: 'contain',
                         position: 'relative',
                         zIndex: 2,
@@ -315,24 +290,12 @@ export default function Work() {
                   </div>
                 </div>
 
-                {/* Content side */}
+                {/* Content */}
                 <div className="flex-1" style={{ minWidth: 0 }}>
-                  <div
-                    className="font-mono"
-                    style={{
-                      fontSize: '0.75rem',
-                      color: '#C8FF2E',
-                      marginBottom: '1rem',
-                      letterSpacing: '0.1em',
-                    }}
-                  >
-                    0{project.id} / 0{projects.length}
-                  </div>
-
                   <h2
                     className="font-display uppercase"
                     style={{
-                      fontSize: 'clamp(1.75rem, 3vw, 2.5rem)',
+                      fontSize: 'clamp(1.5rem, 3vw, 2.25rem)',
                       lineHeight: 1.1,
                       color: '#F5F5F0',
                       marginBottom: '0.5rem',
@@ -347,7 +310,7 @@ export default function Work() {
                     style={{
                       fontSize: '0.75rem',
                       color: '#C8FF2E',
-                      marginBottom: '1.5rem',
+                      marginBottom: '1.25rem',
                       letterSpacing: '0.02em',
                     }}
                   >
@@ -357,17 +320,17 @@ export default function Work() {
                   <p
                     className="font-mono"
                     style={{
-                      fontSize: '0.875rem',
+                      fontSize: 'clamp(0.75rem, 1.2vw, 0.875rem)',
                       lineHeight: 1.7,
                       color: '#8A8A95',
-                      marginBottom: '2rem',
+                      marginBottom: '1.5rem',
                       maxWidth: '480px',
                     }}
                   >
                     {project.description}
                   </p>
 
-                  <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+                  <div className="flex flex-wrap" style={{ gap: '0.75rem' }}>
                     {project.metrics.map((metric, i) => (
                       <div
                         key={i}
@@ -375,7 +338,7 @@ export default function Work() {
                         style={{
                           fontSize: '0.6875rem',
                           color: '#F5F5F0',
-                          padding: '0.5rem 1rem',
+                          padding: '0.4rem 0.875rem',
                           border: '1px solid rgba(200, 255, 46, 0.2)',
                           borderRadius: '4px',
                           background: 'rgba(200, 255, 46, 0.04)',
@@ -392,36 +355,17 @@ export default function Work() {
           ))}
         </div>
 
-        {/* Dots navigation */}
+        {/* Controls */}
         <div
-          className="flex items-center justify-center gap-2"
-          style={{ marginTop: '2rem' }}
+          className="flex items-center justify-center gap-4"
+          style={{ marginTop: 'clamp(1.5rem, 3vw, 2rem)' }}
         >
-          {projects.map((_, i) => (
-            <button
-              key={i}
-              onClick={() => goToSlide(i)}
-              className="cursor-pointer"
-              style={{
-                width: i === activeIndex ? '32px' : '8px',
-                height: '8px',
-                borderRadius: i === activeIndex ? '4px' : '50%',
-                background: i === activeIndex ? '#C8FF2E' : 'rgba(90, 90, 101, 0.5)',
-                border: 'none',
-                transition: 'all 0.4s ease',
-              }}
-            />
-          ))}
-        </div>
-
-        {/* Mobile nav arrows */}
-        <div className="flex md:hidden items-center justify-center gap-3" style={{ marginTop: '1.5rem' }}>
           <button
             onClick={prevSlide}
-            className="cursor-pointer"
+            className="md:hidden cursor-pointer"
             style={{
-              width: '44px',
-              height: '44px',
+              width: '40px',
+              height: '40px',
               borderRadius: '50%',
               border: '1px solid rgba(90, 90, 101, 0.35)',
               background: 'transparent',
@@ -435,12 +379,31 @@ export default function Work() {
               <path d="m15 18-6-6 6-6" />
             </svg>
           </button>
+
+          <div className="flex items-center gap-2">
+            {projects.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => goToSlide(i)}
+                className="cursor-pointer"
+                style={{
+                  width: i === activeIndex ? '32px' : '8px',
+                  height: '8px',
+                  borderRadius: i === activeIndex ? '4px' : '50%',
+                  background: i === activeIndex ? '#C8FF2E' : 'rgba(90, 90, 101, 0.5)',
+                  border: 'none',
+                  transition: 'all 0.4s ease',
+                }}
+              />
+            ))}
+          </div>
+
           <button
             onClick={nextSlide}
-            className="cursor-pointer"
+            className="md:hidden cursor-pointer"
             style={{
-              width: '44px',
-              height: '44px',
+              width: '40px',
+              height: '40px',
               borderRadius: '50%',
               border: '1px solid rgba(90, 90, 101, 0.35)',
               background: 'transparent',

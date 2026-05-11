@@ -1,13 +1,10 @@
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
-import { DissolvingHelix } from '@/lib/DissolvingHelix';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function Hero() {
-  const canvasContainerRef = useRef<HTMLDivElement>(null);
-  const helixRef = useRef<DissolvingHelix | null>(null);
   const heroTextRef = useRef<HTMLDivElement>(null);
   const captionRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
@@ -16,11 +13,6 @@ export default function Hero() {
   const statsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!canvasContainerRef.current) return;
-
-    const helix = new DissolvingHelix(canvasContainerRef.current);
-    helixRef.current = helix;
-
     // Hero text entrance with blur-to-focus
     const tl = gsap.timeline({ delay: 0.3 });
 
@@ -54,29 +46,8 @@ export default function Hero() {
         '-=0.3'
       );
 
-    // Canvas lifecycle — fade out when scrolled past hero
-    ScrollTrigger.create({
-      trigger: heroTextRef.current,
-      start: 'bottom top',
-      end: 'bottom top',
-      onLeave: () => {
-        helix.pause();
-        const spotlight = document.getElementById('cursor-spotlight');
-        if (spotlight) spotlight.style.opacity = '1';
-      },
-      onEnterBack: () => {
-        helix.resume();
-        const spotlight = document.getElementById('cursor-spotlight');
-        if (spotlight) spotlight.style.opacity = '0';
-      },
-    });
-
     return () => {
-      helix.destroy();
       tl.kill();
-      ScrollTrigger.getAll().forEach((t) => {
-        if (t.vars.trigger === heroTextRef.current) t.kill();
-      });
     };
   }, []);
 
@@ -92,19 +63,6 @@ export default function Hero() {
         overflow: 'hidden',
       }}
     >
-      {/* WebGL Canvas Container */}
-      <div
-        ref={canvasContainerRef}
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          zIndex: 0,
-        }}
-      />
-
       {/* Hero Content: Text + Avatar */}
       <div
         ref={heroTextRef}

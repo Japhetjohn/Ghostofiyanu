@@ -101,6 +101,38 @@ export default function Manifesto() {
           Every touchpoint is intentional. Every voice matters. Ghost isn't a name — it's the
           standard: invisible infrastructure, visible results.
         </p>
+
+        <div
+          className="font-mono text-center"
+          style={{
+            marginTop: 'clamp(1.5rem, 3vw, 2.5rem)',
+            padding: 'clamp(1rem, 2vw, 1.5rem)',
+            border: '1px solid rgba(200, 255, 46, 0.12)',
+            borderRadius: '8px',
+            background: 'rgba(200, 255, 46, 0.03)',
+          }}
+        >
+          <div
+            className="font-mono uppercase"
+            style={{
+              fontSize: '0.625rem',
+              color: '#C8FF2E',
+              letterSpacing: '0.15em',
+              marginBottom: '0.5rem',
+            }}
+          >
+            Also: Merchant Onboarding
+          </div>
+          <p
+            style={{
+              fontSize: 'clamp(0.75rem, 1vw, 0.875rem)',
+              lineHeight: 1.6,
+              color: '#8A8A95',
+            }}
+          >
+            Onboarded 10+ local businesses — clothing stores, restaurants, salons — to accept crypto payments. Bridging traditional commerce and Web3 finance through hands-on IRL engagement and education.
+          </p>
+        </div>
       </div>
     </section>
   );

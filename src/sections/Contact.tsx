@@ -9,6 +9,10 @@ export default function Contact() {
   const headingRef = useRef<HTMLHeadingElement>(null);
   const bodyRef = useRef<HTMLParagraphElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
+
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [message, setMessage] = useState('');
   const [submitted, setSubmitted] = useState(false);
 
   useEffect(() => {
@@ -18,7 +22,7 @@ export default function Contact() {
     const form = formRef.current;
     if (!section || !heading || !body || !form) return;
 
-    const formFields = form.querySelectorAll('input, textarea, button');
+    const fields = form.querySelectorAll('input, textarea, button');
 
     const tl = gsap.timeline({
       scrollTrigger: {
@@ -33,26 +37,36 @@ export default function Contact() {
       { opacity: 0, y: 40 },
       { opacity: 1, y: 0, duration: 0.6, stagger: 0.1, ease: 'power3.out' }
     ).fromTo(
-      formFields,
+      fields,
       { opacity: 0, y: 20 },
-      {
-        opacity: 1,
-        y: 0,
-        duration: 0.5,
-        stagger: 0.05,
-        ease: 'power2.out',
-      },
+      { opacity: 1, y: 0, duration: 0.5, stagger: 0.05, ease: 'power2.out' },
       '-=0.3'
     );
 
-    return () => {
-      tl.kill();
-    };
+    return () => { tl.kill(); };
   }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!name.trim() || !email.trim() || !message.trim()) return;
+
+    const text = `Name: ${name}\nEmail: ${email}\nMessage: ${message}`;
+    const url = `https://t.me/ghostofiyanu?text=${encodeURIComponent(text)}`;
+    window.open(url, '_blank');
     setSubmitted(true);
+  };
+
+  const inputStyle: React.CSSProperties = {
+    background: '#1C1C22',
+    border: '1px solid rgba(90, 90, 101, 0.4)',
+    borderRadius: '4px',
+    padding: '0.875rem 1rem',
+    color: '#F5F5F0',
+    fontFamily: "'JetBrains Mono', monospace",
+    fontSize: '0.875rem',
+    width: '100%',
+    outline: 'none',
+    transition: 'border-color 0.2s ease',
   };
 
   return (
@@ -60,24 +74,15 @@ export default function Contact() {
       id="contact"
       ref={sectionRef}
       className="relative z-10"
-      style={{
-        background: '#0A0A0F',
-        padding: 'var(--section-gap, 8rem) 0',
-      }}
+      style={{ background: '#0A0A0F', padding: 'clamp(4rem, 8vw, 8rem) 0' }}
     >
-      <div
-        className="mx-auto"
-        style={{
-          maxWidth: '56ch',
-          padding: '0 1.5rem',
-        }}
-      >
+      <div className="mx-auto" style={{ maxWidth: '56ch', padding: '0 1.5rem' }}>
         <h1
           ref={headingRef}
           className="font-display text-center uppercase"
           style={{
             fontSize: 'clamp(2.5rem, 5vw, 5.5rem)',
-            lineHeight: 1.0,
+            lineHeight: 1,
             letterSpacing: '-0.01em',
             color: '#F5F5F0',
             opacity: 0,
@@ -119,21 +124,12 @@ export default function Contact() {
                 background: 'rgba(200, 255, 46, 0.15)',
               }}
             >
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="#C8FF2E"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#C8FF2E" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <polyline points="20 6 9 17 4 12" />
               </svg>
             </div>
             <p className="font-mono text-sm" style={{ color: '#C8FF2E' }}>
-              Message sent — Ghost will be in touch
+              Telegram opened — send your message
             </p>
           </div>
         ) : (
@@ -144,95 +140,54 @@ export default function Contact() {
             style={{ maxWidth: '480px' }}
           >
             <div className="mb-5">
-              <label
-                className="block font-mono text-xs uppercase tracking-wider mb-2"
-                style={{ color: '#8A8A95' }}
-              >
+              <label className="block font-mono text-xs uppercase tracking-wider mb-2" style={{ color: '#8A8A95' }}>
                 Name
               </label>
               <input
                 type="text"
                 required
-                className="w-full outline-none transition-colors duration-200"
-                style={{
-                  background: '#1C1C22',
-                  border: '1px solid rgba(90, 90, 101, 0.4)',
-                  borderRadius: '4px',
-                  padding: '0.875rem 1rem',
-                  color: '#F5F5F0',
-                  fontFamily: "'JetBrains Mono', monospace",
-                  fontSize: '0.875rem',
-                }}
-                onFocus={(e) => {
-                  e.currentTarget.style.borderColor = '#C8FF2E';
-                }}
-                onBlur={(e) => {
-                  e.currentTarget.style.borderColor = 'rgba(90, 90, 101, 0.4)';
-                }}
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                style={inputStyle}
+                onFocus={(e) => { e.currentTarget.style.borderColor = '#C8FF2E'; }}
+                onBlur={(e) => { e.currentTarget.style.borderColor = 'rgba(90, 90, 101, 0.4)'; }}
               />
             </div>
 
             <div className="mb-5">
-              <label
-                className="block font-mono text-xs uppercase tracking-wider mb-2"
-                style={{ color: '#8A8A95' }}
-              >
+              <label className="block font-mono text-xs uppercase tracking-wider mb-2" style={{ color: '#8A8A95' }}>
                 Email
               </label>
               <input
                 type="email"
                 required
-                className="w-full outline-none transition-colors duration-200"
-                style={{
-                  background: '#1C1C22',
-                  border: '1px solid rgba(90, 90, 101, 0.4)',
-                  borderRadius: '4px',
-                  padding: '0.875rem 1rem',
-                  color: '#F5F5F0',
-                  fontFamily: "'JetBrains Mono', monospace",
-                  fontSize: '0.875rem',
-                }}
-                onFocus={(e) => {
-                  e.currentTarget.style.borderColor = '#C8FF2E';
-                }}
-                onBlur={(e) => {
-                  e.currentTarget.style.borderColor = 'rgba(90, 90, 101, 0.4)';
-                }}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                style={inputStyle}
+                onFocus={(e) => { e.currentTarget.style.borderColor = '#C8FF2E'; }}
+                onBlur={(e) => { e.currentTarget.style.borderColor = 'rgba(90, 90, 101, 0.4)'; }}
               />
             </div>
 
             <div className="mb-6">
-              <label
-                className="block font-mono text-xs uppercase tracking-wider mb-2"
-                style={{ color: '#8A8A95' }}
-              >
+              <label className="block font-mono text-xs uppercase tracking-wider mb-2" style={{ color: '#8A8A95' }}>
                 Message
               </label>
               <textarea
                 required
                 rows={4}
-                className="w-full outline-none transition-colors duration-200 resize-none"
-                style={{
-                  background: '#1C1C22',
-                  border: '1px solid rgba(90, 90, 101, 0.4)',
-                  borderRadius: '4px',
-                  padding: '0.875rem 1rem',
-                  color: '#F5F5F0',
-                  fontFamily: "'JetBrains Mono', monospace",
-                  fontSize: '0.875rem',
-                }}
-                onFocus={(e) => {
-                  e.currentTarget.style.borderColor = '#C8FF2E';
-                }}
-                onBlur={(e) => {
-                  e.currentTarget.style.borderColor = 'rgba(90, 90, 101, 0.4)';
-                }}
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                className="resize-none"
+                style={inputStyle}
+                onFocus={(e) => { e.currentTarget.style.borderColor = '#C8FF2E'; }}
+                onBlur={(e) => { e.currentTarget.style.borderColor = 'rgba(90, 90, 101, 0.4)'; }}
               />
             </div>
 
             <button
               type="submit"
-              className="w-full font-mono uppercase text-sm tracking-wider transition-colors duration-200 cursor-pointer"
+              className="w-full font-mono uppercase text-sm tracking-wider cursor-pointer"
               style={{
                 background: '#C8FF2E',
                 color: '#0A0A0F',
@@ -240,15 +195,12 @@ export default function Contact() {
                 borderRadius: '4px',
                 border: 'none',
                 fontWeight: 700,
+                transition: 'background 0.2s ease',
               }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = '#F5F5F0';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = '#C8FF2E';
-              }}
+              onMouseEnter={(e) => { e.currentTarget.style.background = '#F5F5F0'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = '#C8FF2E'; }}
             >
-              Send Message
+              Send via Telegram
             </button>
           </form>
         )}
