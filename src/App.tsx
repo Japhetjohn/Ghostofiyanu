@@ -6,6 +6,7 @@ import Manifesto from '@/sections/Manifesto';
 import ProofOfWork from '@/sections/ProofOfWork';
 import Work from '@/sections/Work';
 import Skills from '@/sections/Skills';
+import Testimonials from '@/sections/Testimonials';
 import Contact from '@/sections/Contact';
 import Footer from '@/sections/Footer';
 
@@ -22,6 +23,7 @@ export default function App() {
         <ProofOfWork />
         <Work />
         <Skills />
+        <Testimonials />
         <Contact />
       </main>
       <Footer />

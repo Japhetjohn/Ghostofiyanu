@@ -220,8 +220,7 @@ export default function Hero() {
           className="hero-avatar"
           style={{
             position: 'relative',
-            width: 'clamp(180px, 28vw, 380px)',
-            height: 'clamp(200px, 32vw, 440px)',
+            width: 'clamp(200px, 30vw, 420px)',
             flexShrink: 0,
             display: 'flex',
             alignItems: 'flex-end',
@@ -234,13 +233,13 @@ export default function Hero() {
           <div
             style={{
               position: 'absolute',
-              bottom: '10%',
+              bottom: '20%',
               left: '50%',
               transform: 'translateX(-50%)',
-              width: '120%',
-              height: '80%',
+              width: '140%',
+              height: '60%',
               borderRadius: '50%',
-              background: 'radial-gradient(ellipse, rgba(200, 255, 46, 0.08) 0%, transparent 70%)',
+              background: 'radial-gradient(ellipse, rgba(200, 255, 46, 0.06) 0%, transparent 70%)',
               filter: 'blur(40px)',
               pointerEvents: 'none',
               animation: 'glowPulse 4s ease-in-out infinite',
@@ -252,12 +251,13 @@ export default function Hero() {
             className="hero-avatar-img"
             style={{
               width: '100%',
-              height: '100%',
-              objectFit: 'contain',
-              objectPosition: 'bottom center',
+              height: 'auto',
+              display: 'block',
               position: 'relative',
               zIndex: 2,
-              filter: 'drop-shadow(0 0 60px rgba(200, 255, 46, 0.1))',
+              maskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 65%, rgba(0,0,0,0) 100%)',
+              WebkitMaskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 65%, rgba(0,0,0,0) 100%)',
+              filter: 'drop-shadow(0 0 60px rgba(200, 255, 46, 0.08))',
               animation: 'floatAvatar 6s ease-in-out infinite',
             }}
           />
@@ -305,8 +305,8 @@ export default function Hero() {
             margin-top: 2rem !important;
           }
           .hero-avatar {
-            width: 200px !important;
-            height: 220px !important;
+            width: 240px !important;
+            height: auto !important;
             opacity: 1 !important;
             animation: none !important;
             transform: none !important;
@@ -314,6 +314,8 @@ export default function Hero() {
           }
           .hero-avatar-img {
             animation: none !important;
+            mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 60%, rgba(0,0,0,0) 100%) !important;
+            -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 60%, rgba(0,0,0,0) 100%) !important;
           }
         }
       `}</style>
