@@ -49,10 +49,6 @@ export default function Contact() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim() || !email.trim() || !message.trim()) return;
-
-    const text = `Name: ${name}\nEmail: ${email}\nMessage: ${message}`;
-    const url = `https://t.me/ghostofiyanu?text=${encodeURIComponent(text)}`;
-    window.open(url, '_blank');
     setSubmitted(true);
   };
 
@@ -129,7 +125,7 @@ export default function Contact() {
               </svg>
             </div>
             <p className="font-mono text-sm" style={{ color: '#C8FF2E' }}>
-              Telegram opened — send your message
+              Message sent — Ghost will be in touch
             </p>
           </div>
         ) : (
@@ -200,7 +196,7 @@ export default function Contact() {
               onMouseEnter={(e) => { e.currentTarget.style.background = '#F5F5F0'; }}
               onMouseLeave={(e) => { e.currentTarget.style.background = '#C8FF2E'; }}
             >
-              Send via Telegram
+              Send Message
             </button>
           </form>
         )}
