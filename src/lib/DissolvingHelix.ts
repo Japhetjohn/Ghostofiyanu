@@ -83,9 +83,9 @@ void main() {
   vec3 noise = texture2D(uNoiseMap, aInitialPosition.xy).rgb;
   vec3 disturbedPos = aInitialPosition * (vec3(1.0) + (noise * 0.015));
 
-  vec3 position = disturbedPos * (1.0 + (uDissolveProgress * 0.7));
+  vec3 helixPosition = disturbedPos * (1.0 + (uDissolveProgress * 0.7));
 
-  vec3 newPosition = rotate(position, aAxis, uSpeed * 2.0 * age) + transformed;
+  vec3 newPosition = rotate(helixPosition, aAxis, uSpeed * 2.0 * age) + position;
   newPosition *= scale;
 
   float driftX = snoise(vec2(newPosition.x * uFreq + (age * 1.5), newPosition.y * uFreq)) * uAmp;

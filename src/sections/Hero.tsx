@@ -13,6 +13,7 @@ export default function Hero() {
   const titleRef = useRef<HTMLHeadingElement>(null);
   const subtitleRef = useRef<HTMLParagraphElement>(null);
   const ctaRef = useRef<HTMLAnchorElement>(null);
+  const statsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!canvasContainerRef.current) return;
@@ -45,6 +46,12 @@ export default function Hero() {
         { opacity: 0, y: 20 },
         { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' },
         '-=0.4'
+      )
+      .fromTo(
+        statsRef.current,
+        { opacity: 0, y: 20 },
+        { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' },
+        '-=0.3'
       );
 
     // Canvas lifecycle — fade out when scrolled past hero
@@ -161,6 +168,51 @@ export default function Hero() {
           >
             Get in touch
           </a>
+
+          {/* Stats strip */}
+          <div
+            ref={statsRef}
+            className="hero-stats"
+            style={{
+              marginTop: '2.5rem',
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: '2rem',
+              opacity: 0,
+            }}
+          >
+            {[
+              { value: '500+', label: 'Event Attendees' },
+              { value: '409+', label: 'Referrals' },
+              { value: '1000+', label: 'Students' },
+              { value: '10+', label: 'Businesses' },
+            ].map((stat) => (
+              <div key={stat.label}>
+                <div
+                  className="font-display"
+                  style={{
+                    fontSize: '1.25rem',
+                    color: '#C8FF2E',
+                    lineHeight: 1,
+                    letterSpacing: '-0.02em',
+                  }}
+                >
+                  {stat.value}
+                </div>
+                <div
+                  className="font-mono uppercase"
+                  style={{
+                    fontSize: '0.5625rem',
+                    color: '#5A5A65',
+                    letterSpacing: '0.1em',
+                    marginTop: '0.25rem',
+                  }}
+                >
+                  {stat.label}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Avatar Image */}
@@ -246,6 +298,11 @@ export default function Hero() {
             display: flex !important;
             flex-direction: column !important;
             max-width: 100% !important;
+          }
+          .hero-stats {
+            justify-content: center !important;
+            gap: 1.5rem !important;
+            margin-top: 2rem !important;
           }
           .hero-avatar {
             width: 200px !important;

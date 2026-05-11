@@ -7,42 +7,52 @@ gsap.registerPlugin(ScrollTrigger);
 const projects = [
   {
     id: 1,
-    title: 'SEND FINTECH',
-    role: 'Marketing & Community Manager',
+    title: 'SEND',
+    role: 'Ex-Contributor & Affiliate',
     description:
-      'Led community engagement campaigns and onboarding strategies for a fintech payments platform. Hosted multiple X Spaces and online events to educate and onboard new users. Drove community conversations that strengthened brand trust and adoption. Built ambassador initiatives and collaborated with influencers to increase platform awareness.',
+      'Contributed to Send fintech platform as an affiliate and community builder. Hosted large-scale events that drew over 500+ attendees and built a strong referral network driving user adoption across Nigeria.',
     image: '/images/proj-send.png',
-    metrics: ['15+ X Spaces', '10K+ Engagement', 'Brand Trust'],
+    metrics: ['500+ Attendees', '209+ Referrals', 'Ex-Contributor'],
     color: '#C8FF2E',
   },
   {
     id: 2,
-    title: 'ACADEMIA.EDU',
-    role: 'Community Manager & Contributor',
+    title: 'HOSTFINANCE',
+    role: 'Community Manager / Growth Lead',
     description:
-      'Managed an active learning-focused crypto community, engaging with students and enthusiasts. Organized Q&A sessions, AMAs, and study groups to improve user retention. Supported growth campaigns that improved adoption within university circles.',
-    image: '/images/proj-academia.png',
-    metrics: ['500+ Students', '40+ Sessions', 'Retention Up'],
+      'Led community growth initiatives for HostFinance. Built and managed referral programs, engagement campaigns, and onboarding flows that converted users into active community members and ambassadors.',
+    image: null,
+    metrics: ['200+ Referrals', 'Growth Lead', 'Community Manager'],
     color: '#C8FF2E',
   },
   {
     id: 3,
-    title: 'ORBIT ILORIN',
-    role: 'Core Lead — ORBIT Program',
+    title: 'ORBIT — ILORIN INNOVATION HUB',
+    role: 'Co-Lead',
     description:
-      'Led the ORBIT internship program at Ilorin Innovation Hub, increasing awareness of Web3 and Web2 solutions. Bridged the gap between technology and community through strategic partnerships with IHS Towers, CcHub, and Future Africa.',
+      'Co-led the ORBIT program at Ilorin Innovation Hub, driving Web3 and Web2 awareness. Organized campus onboarding initiatives reaching over 1,000 students and built strategic partnerships with local innovators.',
     image: '/images/proj-orbit.png',
-    metrics: ['50+ Interns', '4 Partners', 'Innovation Hub'],
+    metrics: ['1000+ Students', 'Co-Lead', 'Campus Onboarding'],
     color: '#C8FF2E',
   },
   {
     id: 4,
-    title: 'IRL ACTIVATIONS',
-    role: 'Event Organizer & Onboarding Lead',
+    title: 'ACADEMIA APP',
+    role: 'Community Manager',
     description:
-      'Organized 2 large-scale in-person events with 500+ attendees each to educate and onboard users into Web3 and fintech platforms. Successfully onboarded 200+ individuals to a fintech app through IRL activations and physical engagement.',
+      'Managed community operations for Academia App, engaging students and learners. Organized study groups, Q&A sessions, and educational campaigns that improved retention and user engagement within university circles.',
+    image: '/images/proj-academia.png',
+    metrics: ['Community Manager', 'Education', 'Retention'],
+    color: '#C8FF2E',
+  },
+  {
+    id: 5,
+    title: 'MERCHANT ONBOARDING',
+    role: 'Crypto Adoption Lead',
+    description:
+      'Onboarded 10+ local businesses including clothing stores, restaurants, and salons to accept crypto payments. Bridged the gap between traditional commerce and Web3 finance through hands-on IRL engagement and education.',
     image: '/images/proj-irl.png',
-    metrics: ['1000+ Attendees', '200+ Onboarded', '2 Mega Events'],
+    metrics: ['10+ Businesses', 'IRL Onboarding', 'Crypto Payments'],
     color: '#C8FF2E',
   },
 ];
@@ -103,6 +113,8 @@ export default function Work() {
       triggers.forEach((t) => t.kill());
     };
   }, []);
+
+  const totalProjects = projects.length;
 
   return (
     <section
@@ -181,20 +193,52 @@ export default function Work() {
                       pointerEvents: 'none',
                     }}
                   />
-                  <img
-                    src={project.image}
-                    alt={project.title}
-                    style={{
-                      width: '100%',
-                      maxWidth: '380px',
-                      height: 'auto',
-                      objectFit: 'contain',
-                      position: 'relative',
-                      zIndex: 2,
-                      filter: 'drop-shadow(0 20px 40px rgba(0,0,0,0.5))',
-                    }}
-                    loading="lazy"
-                  />
+                  {project.image ? (
+                    <img
+                      src={project.image}
+                      alt={project.title}
+                      style={{
+                        width: '100%',
+                        maxWidth: '380px',
+                        height: 'auto',
+                        objectFit: 'contain',
+                        position: 'relative',
+                        zIndex: 2,
+                        filter: 'drop-shadow(0 20px 40px rgba(0,0,0,0.5))',
+                      }}
+                      loading="lazy"
+                    />
+                  ) : (
+                    <div
+                      style={{
+                        width: '100%',
+                        maxWidth: '380px',
+                        aspectRatio: '1 / 1',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        borderRadius: '8px',
+                        background:
+                          'linear-gradient(135deg, rgba(200, 255, 46, 0.03) 0%, rgba(28, 28, 34, 0.6) 100%)',
+                        border: '1px solid rgba(200, 255, 46, 0.08)',
+                        position: 'relative',
+                        zIndex: 2,
+                      }}
+                    >
+                      <span
+                        className="font-display"
+                        style={{
+                          fontSize: 'clamp(2.5rem, 5vw, 4rem)',
+                          color: 'rgba(200, 255, 46, 0.15)',
+                          letterSpacing: '-0.05em',
+                          lineHeight: 1,
+                          fontWeight: 800,
+                        }}
+                      >
+                        HF
+                      </span>
+                    </div>
+                  )}
                 </div>
 
                 {/* Content side */}
@@ -214,7 +258,7 @@ export default function Work() {
                       letterSpacing: '0.1em',
                     }}
                   >
-                    0{project.id} / 04
+                    0{project.id} / 0{totalProjects}
                   </div>
 
                   {/* Title */}
