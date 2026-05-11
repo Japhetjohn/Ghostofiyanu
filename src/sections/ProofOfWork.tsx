@@ -444,6 +444,15 @@ export default function ProofOfWork() {
           0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.5; }
           100% { transform: translate(-50%, -50%) scale(1.5); opacity: 0; }
         }
+        .arrow-glow:hover {
+          background: rgba(200, 255, 46, 0.2) !important;
+          border-color: #C8FF2E !important;
+          box-shadow: 0 0 24px rgba(200, 255, 46, 0.35), inset 0 0 12px rgba(200, 255, 46, 0.1) !important;
+          transform: scale(1.05);
+        }
+        .arrow-glow:active {
+          transform: scale(0.95);
+        }
       `}</style>
     </section>
   );
@@ -453,29 +462,22 @@ function ArrowButton({ onClick, direction }: { onClick: () => void; direction: '
   return (
     <button
       onClick={onClick}
-      className="cursor-pointer"
+      className="arrow-glow cursor-pointer"
       style={{
-        width: '44px',
-        height: '44px',
+        width: '48px',
+        height: '48px',
         borderRadius: '50%',
-        border: '1px solid rgba(90, 90, 101, 0.35)',
-        background: 'transparent',
-        color: '#8A8A95',
+        border: '1px solid rgba(200, 255, 46, 0.4)',
+        background: 'rgba(200, 255, 46, 0.08)',
+        color: '#C8FF2E',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         transition: 'all 0.3s ease',
-      }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.borderColor = '#C8FF2E';
-        e.currentTarget.style.color = '#C8FF2E';
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.borderColor = 'rgba(90, 90, 101, 0.35)';
-        e.currentTarget.style.color = '#8A8A95';
+        boxShadow: '0 0 12px rgba(200, 255, 46, 0.15), inset 0 0 8px rgba(200, 255, 46, 0.05)',
       }}
     >
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
         {direction === 'left' ? <path d="m15 18-6-6 6-6" /> : <path d="m9 18 6-6-6-6" />}
       </svg>
     </button>
