@@ -121,7 +121,7 @@ export default function Manifesto() {
               marginBottom: '0.5rem',
             }}
           >
-            Also: Merchant Onboarding
+            Merchant Onboarding
           </div>
           <p
             style={{

@@ -59,7 +59,7 @@ export default function Footer() {
             letterSpacing: '0.05em',
           }}
         >
-          &copy; 2026 Ghost. All rights reserved.
+          &copy; 2026
         </span>
       </div>
     </footer>
