@@ -106,7 +106,7 @@ export default function ProofOfWork() {
 
   return (
     <section id="proof-of-work" ref={sectionRef}
-      style={{ background: '#0A0A0F', minHeight: '100vh', position: 'relative', overflow: 'hidden' }}>
+      style={{ background: '#0A0A0F', minHeight: '100dvh', position: 'relative', overflow: 'hidden' }}>
 
       <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
         width: '900px', height: '900px',

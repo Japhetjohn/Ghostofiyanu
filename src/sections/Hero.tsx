@@ -76,6 +76,7 @@ export default function Hero() {
   return (
     <section
       id="hero"
+      className="hero-section"
       style={{
         position: 'relative',
         height: '100svh',
@@ -100,7 +101,7 @@ export default function Hero() {
       {/* Hero Content: Text + Avatar */}
       <div
         ref={heroTextRef}
-        className="relative z-10 w-full"
+        className="hero-content relative z-10 w-full"
         style={{
           padding: '0 1.5rem 15vh',
           maxWidth: '1728px',
@@ -112,7 +113,7 @@ export default function Hero() {
         }}
       >
         {/* Text Column */}
-        <div style={{ maxWidth: '48ch', flexShrink: 0 }}>
+        <div className="hero-text-col" style={{ maxWidth: '48ch', flexShrink: 0 }}>
           <div
             ref={captionRef}
             className="font-mono text-xs md:text-sm uppercase tracking-widest mb-4"
@@ -196,6 +197,7 @@ export default function Hero() {
           <img
             src="/images/ghost-hero.png"
             alt="Ghost"
+            className="hero-avatar-img"
             style={{
               width: '100%',
               height: '100%',
@@ -224,20 +226,36 @@ export default function Hero() {
           50% { transform: translateY(-8px); }
         }
         @media (max-width: 767px) {
-          #hero > div:last-child {
-            padding: 6rem 1.5rem 2rem !important;
+          .hero-section {
+            min-height: 100svh !important;
+            height: auto !important;
+            align-items: center !important;
+            justify-content: center !important;
+          }
+          .hero-content {
+            padding: 6rem 1.25rem 6rem !important;
             flex-direction: column !important;
             align-items: center !important;
             justify-content: center !important;
             gap: 1.5rem !important;
-            height: 100% !important;
+            height: auto !important;
+          }
+          .hero-text-col {
+            text-align: center !important;
+            align-items: center !important;
+            display: flex !important;
+            flex-direction: column !important;
+            max-width: 100% !important;
           }
           .hero-avatar {
             width: 200px !important;
             height: 220px !important;
             opacity: 1 !important;
+            animation: none !important;
+            transform: none !important;
+            order: -1 !important;
           }
-          .hero-avatar img {
+          .hero-avatar-img {
             animation: none !important;
           }
         }
